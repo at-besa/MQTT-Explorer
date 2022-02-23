@@ -8,6 +8,8 @@ export function sortedNodes(settings: SettingsState, treeNode: q.TreeNode<any>):
 
   if (topicOrder === TopicOrder.abc) {
     edges.sort((a, b) => a.name.localeCompare(b.name))
+  }else {
+    edges.sort((a, b) => a.name.localeCompare(b.name))
   }
   const nodes = edges.map(edge => edge.target)
   if (topicOrder === TopicOrder.messages) {
