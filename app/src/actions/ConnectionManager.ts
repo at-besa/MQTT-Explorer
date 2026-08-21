@@ -132,6 +132,20 @@ export const setConnections = (connections: { [s: string]: ConnectionOptions }):
   type: ActionTypes.CONNECTION_MANAGER_SET_CONNECTIONS,
 })
 
+export const reorderConnections =
+  (connectionIds: string[]) => async (dispatch: Dispatch<any>, getState: () => AppState) => {
+    dispatch({
+      connectionIds,
+      type: ActionTypes.CONNECTION_MANAGER_REORDER_CONNECTIONS,
+    })
+
+    try {
+      await persistentStorage.store(storedConnectionsIdentifier, getState().connectionManager.connections)
+    } catch (error) {
+      dispatch(showError(error))
+    }
+  }
+
 export const selectConnection = (connectionId: string): Action => ({
   selected: connectionId,
   type: ActionTypes.CONNECTION_MANAGER_SELECT_CONNECTION,

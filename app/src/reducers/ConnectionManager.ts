@@ -26,6 +26,7 @@ export type Action =
   | ToggleCertificateSettings
   | DeleteSubscription
   | AddSubscription
+  | ReorderConnections
 
 export enum ActionTypes {
   CONNECTION_MANAGER_SET_CONNECTIONS = 'CONNECTION_MANAGER_SET_CONNECTIONS',
@@ -37,6 +38,7 @@ export enum ActionTypes {
   CONNECTION_MANAGER_TOGGLE_CERTIFICATE_SETTINGS = 'CONNECTION_MANAGER_TOGGLE_CERTIFICATE_SETTINGS',
   CONNECTION_MANAGER_ADD_SUBSCRIPTION = 'CONNECTION_MANAGER_ADD_SUBSCRIPTION',
   CONNECTION_MANAGER_DELETE_SUBSCRIPTION = 'CONNECTION_MANAGER_DELETE_SUBSCRIPTION',
+  CONNECTION_MANAGER_REORDER_CONNECTIONS = 'CONNECTION_MANAGER_REORDER_CONNECTIONS',
 }
 
 export interface SetConnections {
@@ -77,6 +79,11 @@ export interface DeleteConnection {
   connectionId: string
 }
 
+export interface ReorderConnections {
+  type: ActionTypes.CONNECTION_MANAGER_REORDER_CONNECTIONS
+  connectionIds: string[]
+}
+
 export interface ToggleAdvancedSettings {
   type: ActionTypes.CONNECTION_MANAGER_TOGGLE_ADVANCED_SETTINGS
 }
@@ -95,6 +102,7 @@ export const connectionManagerReducer = createReducer(initialState, {
   CONNECTION_MANAGER_TOGGLE_CERTIFICATE_SETTINGS: toggleCertificateSettings,
   CONNECTION_MANAGER_DELETE_SUBSCRIPTION: deleteSubscription,
   CONNECTION_MANAGER_ADD_SUBSCRIPTION: addSubscription,
+  CONNECTION_MANAGER_REORDER_CONNECTIONS: reorderConnections,
 })
 
 function setConnections(state: ConnectionManagerState, action: SetConnections): ConnectionManagerState {
@@ -176,6 +184,18 @@ function deleteSubscription(state: ConnectionManagerState, action: AddSubscripti
         subscriptions: newSubscriptions,
       },
     },
+  }
+}
+
+function reorderConnections(state: ConnectionManagerState, action: ReorderConnections): ConnectionManagerState {
+  const connections: { [s: string]: ConnectionOptions } = {}
+  for (const id of action.connectionIds) {
+    connections[id] = state.connections[id]
+  }
+
+  return {
+    ...state,
+    connections,
   }
 }
 

@@ -15,6 +15,12 @@ export interface Props {
   }
   selected: boolean
   classes: any
+  isDragging: boolean
+  isDragOver: boolean
+  onDragStart: () => void
+  onDragEnter: () => void
+  onDragEnd: () => void
+  onDrop: () => void
 }
 
 function ConnectionItem(props: Props) {
@@ -30,7 +36,23 @@ function ConnectionItem(props: Props) {
     <ListItem
       button
       selected={props.selected}
-      style={{ display: 'block' }}
+      style={{
+        display: 'block',
+        opacity: props.isDragging ? 0.4 : 1,
+        boxShadow: props.isDragOver ? 'inset 0 2px 0 0 currentColor' : undefined,
+      }}
+      draggable
+      onDragStart={props.onDragStart}
+      onDragEnter={event => {
+        event.preventDefault()
+        props.onDragEnter()
+      }}
+      onDragOver={event => event.preventDefault()}
+      onDragEnd={props.onDragEnd}
+      onDrop={event => {
+        event.preventDefault()
+        props.onDrop()
+      }}
       onClick={() => props.actions.connectionManager.selectConnection(props.connection.id)}
       onDoubleClick={() => {
         props.actions.connectionManager.selectConnection(props.connection.id)
