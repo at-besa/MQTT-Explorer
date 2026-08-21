@@ -14,6 +14,7 @@ import {
 import { bindActionCreators } from 'redux'
 import { withStyles } from '@mui/styles'
 import { connect } from 'react-redux'
+import { Subscription } from 'mqtt-explorer-backend/src/DataSource/MqttSource'
 import { ConnectionOptions } from '../../model/ConnectionOptions'
 import { connectionManagerActions } from '../../actions'
 
@@ -21,8 +22,9 @@ function Subscriptions(props: {
   classes: any
   connection: ConnectionOptions
   managerActions: typeof connectionManagerActions
+  onSelectSubscription: (subscription: Subscription) => void
 }) {
-  const { classes, connection, managerActions } = props
+  const { classes, connection, managerActions, onSelectSubscription } = props
 
   return (
     <TableContainer component={Paper} className={`${classes.topicList} advanced-connection-settings-topic-list`}>
@@ -38,10 +40,19 @@ function Subscriptions(props: {
         </TableHead>
         <TableBody>
           {connection.subscriptions.map(subscription => (
-            <TableRow key={`${subscription.topic}_qos_${subscription.qos}`}>
+            <TableRow
+              key={`${subscription.topic}_qos_${subscription.qos}`}
+              hover
+              style={{ cursor: 'pointer' }}
+              onClick={() => onSelectSubscription(subscription)}
+            >
               <TableCell align="right" className={classes.tableCell}>
                 <IconButton
-                  onClick={() => managerActions.deleteSubscription(subscription, connection.id)}
+                  onClick={event => {
+                    event.stopPropagation()
+                    managerActions.deleteSubscription(subscription, connection.id)
+                    onSelectSubscription(subscription)
+                  }}
                   style={{ padding: '6px' }}
                 >
                   <Delete />

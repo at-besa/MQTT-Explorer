@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { Theme } from '@mui/material/styles'
 import { withStyles } from '@mui/styles'
 import { Button, Grid, TextField, Tooltip } from '@mui/material'
-import { QoS } from 'mqtt-explorer-backend/src/DataSource/MqttSource'
+import { QoS, Subscription } from 'mqtt-explorer-backend/src/DataSource/MqttSource'
 import { connectionManagerActions } from '../../actions'
 import { QosSelect } from '../QosSelect'
 import { ConnectionOptions } from '../../model/ConnectionOptions'
@@ -41,6 +41,11 @@ const ConnectionSettings = memo((props: Props) => {
     []
   )
 
+  const selectSubscription = useCallback((subscription: Subscription) => {
+    setTopic(subscription.topic)
+    setQos(subscription.qos)
+  }, [])
+
   return (
     <div>
       <form className={classes.container} noValidate autoComplete="off">
@@ -72,7 +77,7 @@ const ConnectionSettings = memo((props: Props) => {
             </Button>
           </Grid>
           <Grid size={12} style={{ padding: 0 }}>
-            <SubscriptionsAny connection={props.connection} />
+            <SubscriptionsAny connection={props.connection} onSelectSubscription={selectSubscription} />
           </Grid>
           <Grid size={7} className={classes.gridPadding}>
             <TextField
