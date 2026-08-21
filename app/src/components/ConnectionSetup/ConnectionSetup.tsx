@@ -111,7 +111,8 @@ const styles = (theme: Theme) => ({
     margin: `calc((100vh - ${connectionHeight}) / 2) auto 0 auto`,
     minWidth: '800px',
     maxWidth: '850px',
-    height: connectionHeight,
+    minHeight: connectionHeight,
+    maxHeight: '90vh',
     outline: 'none' as const,
     display: 'flex' as const,
     // Mobile responsive adjustments
@@ -142,10 +143,10 @@ const styles = (theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2),
     flex: 10,
+    overflowY: 'auto' as const,
     // Mobile: enable scrolling
     [theme.breakpoints.down('md')]: {
       borderRadius: `${theme.shape.borderRadius}px`,
-      overflowY: 'auto' as const,
     },
   },
   connectionUri: {
